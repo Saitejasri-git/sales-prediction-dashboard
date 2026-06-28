@@ -4,7 +4,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error,r2_score
-df=pd.read_csv("data/orders.csv")
+df=pd.read_csv("orders.csv")
 print(df.head())
 
 # Converting date to datetime
