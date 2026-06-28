@@ -4,32 +4,37 @@ st.set_page_config(page_title="Sales Prediction Dashboard",page_icon="📊",layo
 import pandas as pd
 import google.generativeai as genai
 
+@st.cache_resource
+def load_ai():
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    return genai.GenerativeModel("gemini-2.5-flash")
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model_ai = genai.GenerativeModel("gemini-2.5-flash")
+model_ai = load_ai()
 
 from sklearn.ensemble import RandomForestRegressor
-df=pd.read_csv("orders.csv")
-# Convert Customer Status to numbers
-df["Customer Status"] = df["Customer Status"].str.upper()
+@st.cache_resource
+def load_model():
+    df = pd.read_csv("orders.csv")
 
-df["Customer Status"] = df["Customer Status"].map({
-    "SILVER": 1,
-    "GOLD": 2,
-    "PLATINUM": 3
-})
+    df["Customer Status"] = df["Customer Status"].str.upper()
+    df["Customer Status"] = df["Customer Status"].map({
+        "SILVER": 1,
+        "GOLD": 2,
+        "PLATINUM": 3
+    })
 
-# Features
-X = df[["Quantity Ordered", "Cost Price Per Unit", "Customer Status"]]
+    X = df[["Quantity Ordered", "Cost Price Per Unit", "Customer Status"]]
+    y = df["Total Retail Price for This Order"]
 
-# Target
-y = df["Total Retail Price for This Order"]
-model = RandomForestRegressor(
-    n_estimators=100,
-    random_state=42
-)
+    model = RandomForestRegressor(
+        n_estimators=100,
+        random_state=42
+    )
 
-model.fit(X, y)
+    model.fit(X, y)
+    return model
+
+model = load_model()
 st.title("Sales Prediction Dashboard ")
 st.markdown("---")
 st.write("Predict the revenue of an order using our trained Random Forest Machine Learning model.")
