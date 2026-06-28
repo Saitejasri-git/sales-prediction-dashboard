@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv("data/orders.csv")
+df = pd.read_csv("orders.csv")
 
 print("First 5 Rows:")
 print(df.head())
