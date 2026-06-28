@@ -9,7 +9,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model_ai = genai.GenerativeModel("gemini-2.5-flash")
 
 from sklearn.ensemble import RandomForestRegressor
-df=pd.read_csv("data/orders.csv")
+df=pd.read_csv("orders.csv")
 # Convert Customer Status to numbers
 df["Customer Status"] = df["Customer Status"].str.upper()
 
